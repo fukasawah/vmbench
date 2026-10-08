@@ -1,4 +1,3 @@
-#![allow(unused_assignments)]
 use crate::bench::common::*;
 use crate::bench::Benchmark;
 use crate::runner::{Ctx, EntryMeta, ImplInfo, ParamValue};
@@ -12,7 +11,7 @@ use crate::runner::{Ctx, EntryMeta, ImplInfo, ParamValue};
 #[inline(never)]
 #[no_mangle]
 pub unsafe extern "C" fn vmbench_k_branch_pred(iters: u64, seed: u64) -> u64 {
-    let mut x = seed | 1;
+    let x = seed | 1;
     let mut a = 0u64;
     core::arch::asm!(
         "test {i}, {i}",
@@ -29,7 +28,7 @@ pub unsafe extern "C" fn vmbench_k_branch_pred(iters: u64, seed: u64) -> u64 {
         "jnz 2b",
         "3:",
         i = in(reg) iters,
-        x = inout(reg) x,
+        x = inout(reg) x => _,
         a = inout(reg) a,
         options(nostack)
     );
@@ -40,7 +39,7 @@ pub unsafe extern "C" fn vmbench_k_branch_pred(iters: u64, seed: u64) -> u64 {
 #[inline(never)]
 #[no_mangle]
 pub unsafe extern "C" fn vmbench_k_branch_rand(iters: u64, seed: u64) -> u64 {
-    let mut x = seed | 1;
+    let x = seed | 1;
     let mut a = 0u64;
     let mut t = 0u64;
     core::arch::asm!(
@@ -67,7 +66,7 @@ pub unsafe extern "C" fn vmbench_k_branch_rand(iters: u64, seed: u64) -> u64 {
         "jnz 2b",
         "3:",
         i = in(reg) iters,
-        x = inout(reg) x,
+        x = inout(reg) x => _,
         a = inout(reg) a,
         t = out(reg) t,
         options(nostack)
@@ -79,7 +78,7 @@ pub unsafe extern "C" fn vmbench_k_branch_rand(iters: u64, seed: u64) -> u64 {
 #[inline(never)]
 #[no_mangle]
 pub unsafe extern "C" fn vmbench_k_branch_ind(iters: u64, seed: u64) -> u64 {
-    let mut x = seed | 1;
+    let x = seed | 1;
     let mut a = 0u64;
     let mut t = 0u64;
     let mut u = 0u64;
@@ -105,7 +104,7 @@ pub unsafe extern "C" fn vmbench_k_branch_ind(iters: u64, seed: u64) -> u64 {
         "jnz 2b",
         "3:",
         i = in(reg) iters,
-        x = inout(reg) x,
+        x = inout(reg) x => _,
         a = inout(reg) a,
         t = out(reg) t,
         u = out(reg) u,
@@ -119,7 +118,7 @@ pub unsafe extern "C" fn vmbench_k_branch_ind(iters: u64, seed: u64) -> u64 {
 #[inline(never)]
 #[no_mangle]
 pub unsafe extern "C" fn vmbench_k_branch_pred(iters: u64, seed: u64) -> u64 {
-    let mut x = seed | 1;
+    let x = seed | 1;
     let mut a = 0u64;
     core::arch::asm!(
         "cbz {i}, 3f",
@@ -135,7 +134,7 @@ pub unsafe extern "C" fn vmbench_k_branch_pred(iters: u64, seed: u64) -> u64 {
         "b.ne 2b",
         "3:",
         i = in(reg) iters,
-        x = inout(reg) x,
+        x = inout(reg) x => _,
         a = inout(reg) a,
         options(nostack)
     );
@@ -146,7 +145,7 @@ pub unsafe extern "C" fn vmbench_k_branch_pred(iters: u64, seed: u64) -> u64 {
 #[inline(never)]
 #[no_mangle]
 pub unsafe extern "C" fn vmbench_k_branch_rand(iters: u64, seed: u64) -> u64 {
-    let mut x = seed | 1;
+    let x = seed | 1;
     let mut a = 0u64;
     let mut t = 0u64;
     core::arch::asm!(
@@ -166,7 +165,7 @@ pub unsafe extern "C" fn vmbench_k_branch_rand(iters: u64, seed: u64) -> u64 {
         "b.ne 2b",
         "3:",
         i = in(reg) iters,
-        x = inout(reg) x,
+        x = inout(reg) x => _,
         a = inout(reg) a,
         t = out(reg) t,
         options(nostack)
@@ -178,7 +177,7 @@ pub unsafe extern "C" fn vmbench_k_branch_rand(iters: u64, seed: u64) -> u64 {
 #[inline(never)]
 #[no_mangle]
 pub unsafe extern "C" fn vmbench_k_branch_ind(iters: u64, seed: u64) -> u64 {
-    let mut x = seed | 1;
+    let x = seed | 1;
     let mut a = 0u64;
     let mut t = 0u64;
     let mut u = 0u64;
@@ -202,7 +201,7 @@ pub unsafe extern "C" fn vmbench_k_branch_ind(iters: u64, seed: u64) -> u64 {
         "b.ne 2b",
         "3:",
         i = in(reg) iters,
-        x = inout(reg) x,
+        x = inout(reg) x => _,
         a = inout(reg) a,
         t = out(reg) t,
         u = out(reg) u,

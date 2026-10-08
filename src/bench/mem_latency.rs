@@ -451,7 +451,6 @@ impl Benchmark for TlbCurve {
     fn run(&self, ctx: &mut Ctx, entry: usize) -> Result<(), &'static str> {
         let cap = max_ws(ctx);
         let sizes = [4 << 20, 8 << 20, 16 << 20, 64 << 20, 256 << 20, 1024 << 20];
-        let npts = sizes.len();
         let nruns = ctx.cfg.runs.clamp(1, 8) as usize;
         let mut dep = [[Point { x: 0.0, y: 0.0 }; 6]; 8];
         let mut ind = [[Point { x: 0.0, y: 0.0 }; 6]; 8];
@@ -539,6 +538,28 @@ impl Benchmark for TlbCurve {
 
 pub struct NumaLatency;
 
+/// True when at least one NUMA node accepts `mbind(MPOL_BIND)`. Binding can be
+/// denied even when topology is exposed (for example by container policy), in
+/// which case the benchmark cannot produce a meaningful local/remote split.
+fn numa_bind_available(ctx: &Ctx) -> bool {
+    for node in ctx.env.numa_nodes.iter().take(8) {
+        let Some(p) = crate::sys::mmap_anon(4096, false) else {
+            continue;
+        };
+        let bit = (node.id as usize) / 64;
+        let mut mask = [0u64; 8];
+        if bit < 8 {
+            mask[bit] |= 1u64 << (node.id % 64);
+        }
+        let ok = crate::sys::mbind(p, 4096, crate::sys::MPOL_BIND, &mask, 0).is_ok();
+        let _ = crate::sys::munmap(p, 4096);
+        if ok {
+            return true;
+        }
+    }
+    false
+}
+
 impl Benchmark for NumaLatency {
     fn meta(&self) -> &'static EntryMeta {
         static M: EntryMeta = EntryMeta {
@@ -557,11 +578,13 @@ impl Benchmark for NumaLatency {
     }
 
     fn supported(&self, ctx: &Ctx) -> Result<(), &'static str> {
-        if ctx.env.numa_nodes.len() >= 2 {
-            Ok(())
-        } else {
-            Err("NUMA topology unavailable")
+        if ctx.env.numa_nodes.len() < 2 {
+            return Err("NUMA topology unavailable");
         }
+        if !numa_bind_available(ctx) {
+            return Err("NUMA memory binding unavailable");
+        }
+        Ok(())
     }
 
     fn run(&self, ctx: &mut Ctx, entry: usize) -> Result<(), &'static str> {

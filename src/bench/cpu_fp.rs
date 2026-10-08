@@ -1,4 +1,3 @@
-#![allow(unused_mut, unused_assignments)]
 use crate::bench::common::*;
 use crate::bench::Benchmark;
 use crate::runner::{Ctx, EntryMeta, ImplInfo, ParamValue};
@@ -16,13 +15,13 @@ macro_rules! fp_tp_kernel {
         #[no_mangle]
         pub unsafe extern "C" fn $fname(iters: u64, seed: u64) -> f64 {
             let mut x0 = $setup(seed as $ty);
-            let mut x1 = $setup((seed ^ 0x1111) as $ty);
-            let mut x2 = $setup((seed ^ 0x2222) as $ty);
-            let mut x3 = $setup((seed ^ 0x3333) as $ty);
-            let mut x4 = $setup((seed ^ 0x4444) as $ty);
-            let mut x5 = $setup((seed ^ 0x5555) as $ty);
-            let mut x6 = $setup((seed ^ 0x6666) as $ty);
-            let mut x7 = $setup((seed ^ 0x7777) as $ty);
+            let x1 = $setup((seed ^ 0x1111) as $ty);
+            let x2 = $setup((seed ^ 0x2222) as $ty);
+            let x3 = $setup((seed ^ 0x3333) as $ty);
+            let x4 = $setup((seed ^ 0x4444) as $ty);
+            let x5 = $setup((seed ^ 0x5555) as $ty);
+            let x6 = $setup((seed ^ 0x6666) as $ty);
+            let x7 = $setup((seed ^ 0x7777) as $ty);
             let k = $setup(1.0000001 as $ty);
             core::arch::asm!(
                 "test {i}, {i}",
@@ -69,13 +68,13 @@ macro_rules! fp_fma_kernel {
         #[no_mangle]
         pub unsafe extern "C" fn $fname(iters: u64, seed: u64) -> f64 {
             let mut x0 = $setup(seed as $ty);
-            let mut x1 = $setup((seed ^ 0x1111) as $ty);
-            let mut x2 = $setup((seed ^ 0x2222) as $ty);
-            let mut x3 = $setup((seed ^ 0x3333) as $ty);
-            let mut x4 = $setup((seed ^ 0x4444) as $ty);
-            let mut x5 = $setup((seed ^ 0x5555) as $ty);
-            let mut x6 = $setup((seed ^ 0x6666) as $ty);
-            let mut x7 = $setup((seed ^ 0x7777) as $ty);
+            let x1 = $setup((seed ^ 0x1111) as $ty);
+            let x2 = $setup((seed ^ 0x2222) as $ty);
+            let x3 = $setup((seed ^ 0x3333) as $ty);
+            let x4 = $setup((seed ^ 0x4444) as $ty);
+            let x5 = $setup((seed ^ 0x5555) as $ty);
+            let x6 = $setup((seed ^ 0x6666) as $ty);
+            let x7 = $setup((seed ^ 0x7777) as $ty);
             let k = $setup(1.0000001 as $ty);
             core::arch::asm!(
                 "test {i}, {i}",
@@ -125,13 +124,13 @@ macro_rules! fp_tp_kernel {
         #[no_mangle]
         pub unsafe extern "C" fn $fname(iters: u64, seed: u64) -> f64 {
             let mut x0 = seed as f64;
-            let mut x1 = (seed ^ 0x1111) as f64;
-            let mut x2 = (seed ^ 0x2222) as f64;
-            let mut x3 = (seed ^ 0x3333) as f64;
-            let mut x4 = (seed ^ 0x4444) as f64;
-            let mut x5 = (seed ^ 0x5555) as f64;
-            let mut x6 = (seed ^ 0x6666) as f64;
-            let mut x7 = (seed ^ 0x7777) as f64;
+            let x1 = (seed ^ 0x1111) as f64;
+            let x2 = (seed ^ 0x2222) as f64;
+            let x3 = (seed ^ 0x3333) as f64;
+            let x4 = (seed ^ 0x4444) as f64;
+            let x5 = (seed ^ 0x5555) as f64;
+            let x6 = (seed ^ 0x6666) as f64;
+            let x7 = (seed ^ 0x7777) as f64;
             let k = 1.0000001f64;
             core::arch::asm!(
                 "cbz {i}, 3f",
@@ -159,13 +158,13 @@ macro_rules! fp_tp_kernel {
                 i = in(reg) iters,
                 k = in(vreg) k,
                 x0 = inout(vreg) x0 => x0,
-                x1 = inout(vreg) x1 => x1,
-                x2 = inout(vreg) x2 => x2,
-                x3 = inout(vreg) x3 => x3,
-                x4 = inout(vreg) x4 => x4,
-                x5 = inout(vreg) x5 => x5,
-                x6 = inout(vreg) x6 => x6,
-                x7 = inout(vreg) x7 => x7,
+                x1 = inout(vreg) x1 => _,
+                x2 = inout(vreg) x2 => _,
+                x3 = inout(vreg) x3 => _,
+                x4 = inout(vreg) x4 => _,
+                x5 = inout(vreg) x5 => _,
+                x6 = inout(vreg) x6 => _,
+                x7 = inout(vreg) x7 => _,
                 options(nostack)
             );
             x0
@@ -180,13 +179,13 @@ macro_rules! fp_fma_kernel {
         #[no_mangle]
         pub unsafe extern "C" fn $fname(iters: u64, seed: u64) -> f64 {
             let mut x0 = seed as f64;
-            let mut x1 = (seed ^ 0x1111) as f64;
-            let mut x2 = (seed ^ 0x2222) as f64;
-            let mut x3 = (seed ^ 0x3333) as f64;
-            let mut x4 = (seed ^ 0x4444) as f64;
-            let mut x5 = (seed ^ 0x5555) as f64;
-            let mut x6 = (seed ^ 0x6666) as f64;
-            let mut x7 = (seed ^ 0x7777) as f64;
+            let x1 = (seed ^ 0x1111) as f64;
+            let x2 = (seed ^ 0x2222) as f64;
+            let x3 = (seed ^ 0x3333) as f64;
+            let x4 = (seed ^ 0x4444) as f64;
+            let x5 = (seed ^ 0x5555) as f64;
+            let x6 = (seed ^ 0x6666) as f64;
+            let x7 = (seed ^ 0x7777) as f64;
             let k = 1.0000001f64;
             core::arch::asm!(
                 "cbz {i}, 3f",
@@ -214,13 +213,13 @@ macro_rules! fp_fma_kernel {
                 i = in(reg) iters,
                 k = in(vreg) k,
                 x0 = inout(vreg) x0 => x0,
-                x1 = inout(vreg) x1 => x1,
-                x2 = inout(vreg) x2 => x2,
-                x3 = inout(vreg) x3 => x3,
-                x4 = inout(vreg) x4 => x4,
-                x5 = inout(vreg) x5 => x5,
-                x6 = inout(vreg) x6 => x6,
-                x7 = inout(vreg) x7 => x7,
+                x1 = inout(vreg) x1 => _,
+                x2 = inout(vreg) x2 => _,
+                x3 = inout(vreg) x3 => _,
+                x4 = inout(vreg) x4 => _,
+                x5 = inout(vreg) x5 => _,
+                x6 = inout(vreg) x6 => _,
+                x7 = inout(vreg) x7 => _,
                 options(nostack)
             );
             x0

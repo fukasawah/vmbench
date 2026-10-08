@@ -215,6 +215,12 @@ impl Benchmark for Core2CoreHalf {
         };
         &M
     }
+    fn supported(&self, ctx: &Ctx) -> Result<(), &'static str> {
+        if ctx.env.online_cpus.len() < 3 {
+            return Err("not enough online cpus");
+        }
+        Ok(())
+    }
     fn run(&self, ctx: &mut Ctx, entry: usize) -> Result<(), &'static str> {
         let n = ctx.env.online_cpus.len();
         if n < 3 {
@@ -241,6 +247,12 @@ impl Benchmark for Core2CoreLast {
             metrics: &[M_RT_NS, M_TRANSFER_NS, M_RT_RATE],
         };
         &M
+    }
+    fn supported(&self, ctx: &Ctx) -> Result<(), &'static str> {
+        if ctx.env.online_cpus.len() < 2 {
+            return Err("not enough online cpus");
+        }
+        Ok(())
     }
     fn run(&self, ctx: &mut Ctx, entry: usize) -> Result<(), &'static str> {
         let n = ctx.env.online_cpus.len();

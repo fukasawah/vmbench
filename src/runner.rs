@@ -175,7 +175,7 @@ pub struct Config {
     pub no_progress: bool,
     pub only: Option<&'static str>,
     pub skip: Option<&'static str>,
-    /// Independent repetitions per benchmark (normal 5, quick 3).
+    /// Independent repetitions per benchmark (normal 5, quick 1).
     pub runs: u32,
     /// Storage measurement locations (see `--storage`).
     pub storage_targets: [StorageTarget; MAX_STORAGE_TARGETS],

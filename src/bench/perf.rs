@@ -174,7 +174,7 @@ impl Benchmark for PerfCounters {
                 }
             }
             ctx.begin_run(entry, dur, units);
-            let mut get = |i: usize| vals[i].map(|v| v as f64);
+            let get = |i: usize| vals[i].map(|v| v as f64);
             if let Some(v) = get(0) {
                 ctx.scalar(entry, "cycles", v);
             }

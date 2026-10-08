@@ -165,6 +165,13 @@ impl Benchmark for MultiCoreAll {
         &M
     }
 
+    fn supported(&self, ctx: &Ctx) -> Result<(), &'static str> {
+        if ctx.env.online_cpus.is_empty() {
+            return Err("not enough online cpus");
+        }
+        Ok(())
+    }
+
     fn run(&self, ctx: &mut Ctx, entry: usize) -> Result<(), &'static str> {
         let n = ctx.env.online_cpus.len();
         run_multicore(ctx, entry, n)

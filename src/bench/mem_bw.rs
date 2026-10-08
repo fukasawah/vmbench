@@ -578,6 +578,12 @@ macro_rules! bw_bench {
                 };
                 &M
             }
+            fn supported(&self, ctx: &Ctx) -> Result<(), &'static str> {
+                if $threads == 0 && ctx.env.online_cpus.len() < 2 {
+                    return Err("not enough online cpus");
+                }
+                Ok(())
+            }
             fn run(&self, ctx: &mut Ctx, entry: usize) -> Result<(), &'static str> {
                 if $threads == 1 {
                     single_thread(ctx, entry, $op, $opname)

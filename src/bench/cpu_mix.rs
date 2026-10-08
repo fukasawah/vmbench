@@ -35,8 +35,6 @@ pub fn mix_buf_addr() -> usize {
 pub unsafe extern "C" fn vmbench_k_mix_iter(iters: u64, seed: u64) -> u64 {
     let buf = mix_buf_addr();
     let out: u64;
-    let f1: core::arch::x86_64::__m128d;
-    let f2: core::arch::x86_64::__m128d;
     core::arch::asm!(
         "mov r8, r14",
         "mov r9, r14",
@@ -74,8 +72,8 @@ pub unsafe extern "C" fn vmbench_k_mix_iter(iters: u64, seed: u64) -> u64 {
         in("r14") seed,
         in("r15") buf,
         in("rcx") iters,
-        f1 = inout(xmm_reg) core::arch::x86_64::_mm_set1_pd(1.0000001) => f1,
-        f2 = inout(xmm_reg) core::arch::x86_64::_mm_set1_pd(1.0000001) => f2,
+        f1 = inout(xmm_reg) core::arch::x86_64::_mm_set1_pd(1.0000001) => _,
+        f2 = inout(xmm_reg) core::arch::x86_64::_mm_set1_pd(1.0000001) => _,
         k = in(xmm_reg) core::arch::x86_64::_mm_set1_pd(1.0000001),
         out = lateout(reg) out,
         lateout("r8") _,
@@ -95,8 +93,6 @@ pub unsafe extern "C" fn vmbench_k_mix_iter(iters: u64, seed: u64) -> u64 {
 pub unsafe extern "C" fn vmbench_k_mix_iter(iters: u64, seed: u64) -> u64 {
     let buf = mix_buf_addr();
     let out: u64;
-    let f1: f64;
-    let f2: f64;
     core::arch::asm!(
         "mov x8, x20",
         "mov x9, x20",
@@ -134,8 +130,8 @@ pub unsafe extern "C" fn vmbench_k_mix_iter(iters: u64, seed: u64) -> u64 {
         in("x21") buf,
         in("x2") iters,
         in("x3") 3u64,
-        f1 = inout(vreg) 1.0000001f64 => f1,
-        f2 = inout(vreg) 1.0000001f64 => f2,
+        f1 = inout(vreg) 1.0000001f64 => _,
+        f2 = inout(vreg) 1.0000001f64 => _,
         k = in(vreg) 1.0000001f64,
         out = lateout(reg) out,
         lateout("x0") _,

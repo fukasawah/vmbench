@@ -176,7 +176,7 @@ fn parse_args(arena: &mut Arena) -> Cli {
         cli.cfg.target_run_ns = 80_000_000;
         cli.cfg.max_bench_ns = 3_000_000_000;
         cli.cfg.sustained_ns = cli.cfg.sustained_ns.min(3_000_000_000);
-        cli.cfg.runs = 3;
+        cli.cfg.runs = 1;
     }
 
     // Implicit cwd target unless the user excluded it or named one explicitly.

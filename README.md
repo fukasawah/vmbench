@@ -91,7 +91,7 @@ annotations / benchmarks[]
 }
 ```
 
-- 各 benchmark は独立した run を通常 5 回（`--quick` では 3 回）反復し、
+- 各 benchmark は独立した run を通常 5 回（`--quick` では 1 回）反復し、
   raw run をすべて保持します。
 - 通常比較値は `median`、peak は `best`、`variation_pct` は
   `(max - min) / median * 100` です。

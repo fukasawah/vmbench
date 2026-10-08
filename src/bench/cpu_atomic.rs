@@ -226,7 +226,8 @@ macro_rules! atomic_bench {
                 &M
             }
             fn supported(&self, ctx: &Ctx) -> Result<(), &'static str> {
-                if $n > ctx.env.online_cpus.len() {
+                let need = if $n == 0 { 1 } else { $n };
+                if need > ctx.env.online_cpus.len() {
                     return Err("not enough online cpus");
                 }
                 Ok(())

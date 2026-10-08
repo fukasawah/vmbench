@@ -17,13 +17,13 @@ macro_rules! isa_x86_vec {
         pub unsafe extern "C" fn $fname(iters: u64, seed: u64) -> u64 {
             let s = seed as i64;
             let mut x0 = $setup(s as $cast);
-            let mut x1 = $setup((s ^ 0x1111) as $cast);
-            let mut x2 = $setup((s ^ 0x2222) as $cast);
-            let mut x3 = $setup((s ^ 0x3333) as $cast);
-            let mut x4 = $setup((s ^ 0x4444) as $cast);
-            let mut x5 = $setup((s ^ 0x5555) as $cast);
-            let mut x6 = $setup((s ^ 0x6666) as $cast);
-            let mut x7 = $setup((s ^ 0x7777) as $cast);
+            let x1 = $setup((s ^ 0x1111) as $cast);
+            let x2 = $setup((s ^ 0x2222) as $cast);
+            let x3 = $setup((s ^ 0x3333) as $cast);
+            let x4 = $setup((s ^ 0x4444) as $cast);
+            let x5 = $setup((s ^ 0x5555) as $cast);
+            let x6 = $setup((s ^ 0x6666) as $cast);
+            let x7 = $setup((s ^ 0x7777) as $cast);
             let k = $setup(1 as $cast);
             core::arch::asm!(
                 "test {i}, {i}",
@@ -72,13 +72,13 @@ macro_rules! isa_x86_vec3 {
         pub unsafe extern "C" fn $fname(iters: u64, seed: u64) -> u64 {
             let s = seed as i64;
             let mut x0 = $setup(s as $cast);
-            let mut x1 = $setup((s ^ 0x1111) as $cast);
-            let mut x2 = $setup((s ^ 0x2222) as $cast);
-            let mut x3 = $setup((s ^ 0x3333) as $cast);
-            let mut x4 = $setup((s ^ 0x4444) as $cast);
-            let mut x5 = $setup((s ^ 0x5555) as $cast);
-            let mut x6 = $setup((s ^ 0x6666) as $cast);
-            let mut x7 = $setup((s ^ 0x7777) as $cast);
+            let x1 = $setup((s ^ 0x1111) as $cast);
+            let x2 = $setup((s ^ 0x2222) as $cast);
+            let x3 = $setup((s ^ 0x3333) as $cast);
+            let x4 = $setup((s ^ 0x4444) as $cast);
+            let x5 = $setup((s ^ 0x5555) as $cast);
+            let x6 = $setup((s ^ 0x6666) as $cast);
+            let x7 = $setup((s ^ 0x7777) as $cast);
             let k = $setup(1 as $cast);
             core::arch::asm!(
                 "test {i}, {i}",
@@ -188,14 +188,14 @@ static AES_RKEY: Align16<[u8; 16]> = Align16([1u8; 16]);
 #[no_mangle]
 pub unsafe extern "C" fn vmbench_k_isa_aes(iters: u64, seed: u64) -> u64 {
     let s = seed as i64;
-    let mut x0 = core::arch::x86_64::_mm_set1_epi64x(s);
-    let mut x1 = core::arch::x86_64::_mm_set1_epi64x(s ^ 0x1111);
-    let mut x2 = core::arch::x86_64::_mm_set1_epi64x(s ^ 0x2222);
-    let mut x3 = core::arch::x86_64::_mm_set1_epi64x(s ^ 0x3333);
-    let mut x4 = core::arch::x86_64::_mm_set1_epi64x(s ^ 0x4444);
-    let mut x5 = core::arch::x86_64::_mm_set1_epi64x(s ^ 0x5555);
-    let mut x6 = core::arch::x86_64::_mm_set1_epi64x(s ^ 0x6666);
-    let mut x7 = core::arch::x86_64::_mm_set1_epi64x(s ^ 0x7777);
+    let x0 = core::arch::x86_64::_mm_set1_epi64x(s);
+    let x1 = core::arch::x86_64::_mm_set1_epi64x(s ^ 0x1111);
+    let x2 = core::arch::x86_64::_mm_set1_epi64x(s ^ 0x2222);
+    let x3 = core::arch::x86_64::_mm_set1_epi64x(s ^ 0x3333);
+    let x4 = core::arch::x86_64::_mm_set1_epi64x(s ^ 0x4444);
+    let x5 = core::arch::x86_64::_mm_set1_epi64x(s ^ 0x5555);
+    let x6 = core::arch::x86_64::_mm_set1_epi64x(s ^ 0x6666);
+    let x7 = core::arch::x86_64::_mm_set1_epi64x(s ^ 0x7777);
     // Load the 128-bit round key from memory: LLVM can mis-materialise a
     // constant vector operand as a zero-extended 64-bit move, which would
     // silently change the key.
@@ -235,7 +235,7 @@ pub unsafe extern "C" fn vmbench_k_isa_aes(iters: u64, seed: u64) -> u64 {
         "movq {out}, {x0}",
         i = in(reg) iters,
         k = in(xmm_reg) k,
-        x0 = inout(xmm_reg) x0 => x0,
+        x0 = inout(xmm_reg) x0 => _,
         x1 = inout(xmm_reg) x1 => _,
         x2 = inout(xmm_reg) x2 => _,
         x3 = inout(xmm_reg) x3 => _,
@@ -255,14 +255,14 @@ pub unsafe extern "C" fn vmbench_k_isa_aes(iters: u64, seed: u64) -> u64 {
 #[no_mangle]
 pub unsafe extern "C" fn vmbench_k_isa_sha(iters: u64, seed: u64) -> u64 {
     let s = seed as i32;
-    let mut x0 = core::arch::x86_64::_mm_set1_epi32(s);
-    let mut x1 = core::arch::x86_64::_mm_set1_epi32(s ^ 0x1111);
-    let mut x2 = core::arch::x86_64::_mm_set1_epi32(s ^ 0x2222);
-    let mut x3 = core::arch::x86_64::_mm_set1_epi32(s ^ 0x3333);
-    let mut x4 = core::arch::x86_64::_mm_set1_epi32(s ^ 0x4444);
-    let mut x5 = core::arch::x86_64::_mm_set1_epi32(s ^ 0x5555);
-    let mut x6 = core::arch::x86_64::_mm_set1_epi32(s ^ 0x6666);
-    let mut x7 = core::arch::x86_64::_mm_set1_epi32(s ^ 0x7777);
+    let x0 = core::arch::x86_64::_mm_set1_epi32(s);
+    let x1 = core::arch::x86_64::_mm_set1_epi32(s ^ 0x1111);
+    let x2 = core::arch::x86_64::_mm_set1_epi32(s ^ 0x2222);
+    let x3 = core::arch::x86_64::_mm_set1_epi32(s ^ 0x3333);
+    let x4 = core::arch::x86_64::_mm_set1_epi32(s ^ 0x4444);
+    let x5 = core::arch::x86_64::_mm_set1_epi32(s ^ 0x5555);
+    let x6 = core::arch::x86_64::_mm_set1_epi32(s ^ 0x6666);
+    let x7 = core::arch::x86_64::_mm_set1_epi32(s ^ 0x7777);
     let k = core::arch::x86_64::_mm_set1_epi32(1);
     let out: u64;
     core::arch::asm!(
@@ -298,7 +298,7 @@ pub unsafe extern "C" fn vmbench_k_isa_sha(iters: u64, seed: u64) -> u64 {
         "movq {out}, {x0}",
         i = in(reg) iters,
         k = in(xmm_reg) k,
-        x0 = inout(xmm_reg) x0 => x0,
+        x0 = inout(xmm_reg) x0 => _,
         x1 = inout(xmm_reg) x1 => _,
         x2 = inout(xmm_reg) x2 => _,
         x3 = inout(xmm_reg) x3 => _,
@@ -317,14 +317,14 @@ pub unsafe extern "C" fn vmbench_k_isa_sha(iters: u64, seed: u64) -> u64 {
 #[inline(never)]
 #[no_mangle]
 pub unsafe extern "C" fn vmbench_k_isa_crc32(iters: u64, seed: u64) -> u64 {
-    let mut x0 = seed;
-    let mut x1 = seed ^ 0x1111;
-    let mut x2 = seed ^ 0x2222;
-    let mut x3 = seed ^ 0x3333;
-    let mut x4 = seed ^ 0x4444;
-    let mut x5 = seed ^ 0x5555;
-    let mut x6 = seed ^ 0x6666;
-    let mut x7 = seed ^ 0x7777;
+    let x0 = seed;
+    let x1 = seed ^ 0x1111;
+    let x2 = seed ^ 0x2222;
+    let x3 = seed ^ 0x3333;
+    let x4 = seed ^ 0x4444;
+    let x5 = seed ^ 0x5555;
+    let x6 = seed ^ 0x6666;
+    let x7 = seed ^ 0x7777;
     let out: u64;
     core::arch::asm!(
         "test {i}, {i}",
@@ -359,7 +359,7 @@ pub unsafe extern "C" fn vmbench_k_isa_crc32(iters: u64, seed: u64) -> u64 {
         "mov {out}, {x0}",
         i = in(reg) iters,
         k = in(reg) 0x9e37_79b9_7f4a_7c15u64,
-        x0 = inout(reg) x0 => x0,
+        x0 = inout(reg) x0 => _,
         x1 = inout(reg) x1 => _,
         x2 = inout(reg) x2 => _,
         x3 = inout(reg) x3 => _,
@@ -382,13 +382,13 @@ macro_rules! isa_arm_vec {
         pub unsafe extern "C" fn $fname(iters: u64, seed: u64) -> u64 {
             let s = seed;
             let mut x0 = $setup(s as u32);
-            let mut x1 = $setup((s ^ 0x1111) as u32);
-            let mut x2 = $setup((s ^ 0x2222) as u32);
-            let mut x3 = $setup((s ^ 0x3333) as u32);
-            let mut x4 = $setup((s ^ 0x4444) as u32);
-            let mut x5 = $setup((s ^ 0x5555) as u32);
-            let mut x6 = $setup((s ^ 0x6666) as u32);
-            let mut x7 = $setup((s ^ 0x7777) as u32);
+            let x1 = $setup((s ^ 0x1111) as u32);
+            let x2 = $setup((s ^ 0x2222) as u32);
+            let x3 = $setup((s ^ 0x3333) as u32);
+            let x4 = $setup((s ^ 0x4444) as u32);
+            let x5 = $setup((s ^ 0x5555) as u32);
+            let x6 = $setup((s ^ 0x6666) as u32);
+            let x7 = $setup((s ^ 0x7777) as u32);
             let k = $setup(1);
             core::arch::asm!(
                 "cbz {i}, 3f",
@@ -446,13 +446,13 @@ isa_arm_vec!(
 #[no_mangle]
 pub unsafe extern "C" fn vmbench_k_isa_aes(iters: u64, seed: u64) -> u64 {
     let mut x0 = core::arch::aarch64::vdupq_n_u32(seed as u32);
-    let mut x1 = core::arch::aarch64::vdupq_n_u32((seed ^ 0x1111) as u32);
-    let mut x2 = core::arch::aarch64::vdupq_n_u32((seed ^ 0x2222) as u32);
-    let mut x3 = core::arch::aarch64::vdupq_n_u32((seed ^ 0x3333) as u32);
-    let mut x4 = core::arch::aarch64::vdupq_n_u32((seed ^ 0x4444) as u32);
-    let mut x5 = core::arch::aarch64::vdupq_n_u32((seed ^ 0x5555) as u32);
-    let mut x6 = core::arch::aarch64::vdupq_n_u32((seed ^ 0x6666) as u32);
-    let mut x7 = core::arch::aarch64::vdupq_n_u32((seed ^ 0x7777) as u32);
+    let x1 = core::arch::aarch64::vdupq_n_u32((seed ^ 0x1111) as u32);
+    let x2 = core::arch::aarch64::vdupq_n_u32((seed ^ 0x2222) as u32);
+    let x3 = core::arch::aarch64::vdupq_n_u32((seed ^ 0x3333) as u32);
+    let x4 = core::arch::aarch64::vdupq_n_u32((seed ^ 0x4444) as u32);
+    let x5 = core::arch::aarch64::vdupq_n_u32((seed ^ 0x5555) as u32);
+    let x6 = core::arch::aarch64::vdupq_n_u32((seed ^ 0x6666) as u32);
+    let x7 = core::arch::aarch64::vdupq_n_u32((seed ^ 0x7777) as u32);
     let k = core::arch::aarch64::vdupq_n_u32(0x0101_0101);
     core::arch::asm!(
         "cbz {i}, 4f",
@@ -499,13 +499,13 @@ pub unsafe extern "C" fn vmbench_k_isa_aes(iters: u64, seed: u64) -> u64 {
 #[no_mangle]
 pub unsafe extern "C" fn vmbench_k_isa_sha(iters: u64, seed: u64) -> u64 {
     let mut x0 = core::arch::aarch64::vdupq_n_u32(seed as u32);
-    let mut x1 = core::arch::aarch64::vdupq_n_u32((seed ^ 0x1111) as u32);
-    let mut x2 = core::arch::aarch64::vdupq_n_u32((seed ^ 0x2222) as u32);
-    let mut x3 = core::arch::aarch64::vdupq_n_u32((seed ^ 0x3333) as u32);
-    let mut x4 = core::arch::aarch64::vdupq_n_u32((seed ^ 0x4444) as u32);
-    let mut x5 = core::arch::aarch64::vdupq_n_u32((seed ^ 0x5555) as u32);
-    let mut x6 = core::arch::aarch64::vdupq_n_u32((seed ^ 0x6666) as u32);
-    let mut x7 = core::arch::aarch64::vdupq_n_u32((seed ^ 0x7777) as u32);
+    let x1 = core::arch::aarch64::vdupq_n_u32((seed ^ 0x1111) as u32);
+    let x2 = core::arch::aarch64::vdupq_n_u32((seed ^ 0x2222) as u32);
+    let x3 = core::arch::aarch64::vdupq_n_u32((seed ^ 0x3333) as u32);
+    let x4 = core::arch::aarch64::vdupq_n_u32((seed ^ 0x4444) as u32);
+    let x5 = core::arch::aarch64::vdupq_n_u32((seed ^ 0x5555) as u32);
+    let x6 = core::arch::aarch64::vdupq_n_u32((seed ^ 0x6666) as u32);
+    let x7 = core::arch::aarch64::vdupq_n_u32((seed ^ 0x7777) as u32);
     let k = core::arch::aarch64::vdupq_n_u32(1);
     core::arch::asm!(
         "cbz {i}, 4f",
@@ -552,13 +552,13 @@ pub unsafe extern "C" fn vmbench_k_isa_sha(iters: u64, seed: u64) -> u64 {
 #[no_mangle]
 pub unsafe extern "C" fn vmbench_k_isa_crc32(iters: u64, seed: u64) -> u64 {
     let mut x0 = seed as u32;
-    let mut x1 = (seed ^ 0x1111) as u32;
-    let mut x2 = (seed ^ 0x2222) as u32;
-    let mut x3 = (seed ^ 0x3333) as u32;
-    let mut x4 = (seed ^ 0x4444) as u32;
-    let mut x5 = (seed ^ 0x5555) as u32;
-    let mut x6 = (seed ^ 0x6666) as u32;
-    let mut x7 = (seed ^ 0x7777) as u32;
+    let x1 = (seed ^ 0x1111) as u32;
+    let x2 = (seed ^ 0x2222) as u32;
+    let x3 = (seed ^ 0x3333) as u32;
+    let x4 = (seed ^ 0x4444) as u32;
+    let x5 = (seed ^ 0x5555) as u32;
+    let x6 = (seed ^ 0x6666) as u32;
+    let x7 = (seed ^ 0x7777) as u32;
     core::arch::asm!(
         "cbz {i}, 4f",
         "3:",
