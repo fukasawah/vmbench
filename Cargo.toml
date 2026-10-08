@@ -1,0 +1,26 @@
+[package]
+name = "vmbench"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.89"
+description = "libc-free benchmark for Linux VPS / cloud VMs (CPU, cache, memory, storage)"
+license = "MIT OR Apache-2.0"
+build = "build.rs"
+
+[[bin]]
+name = "vmbench"
+path = "src/main.rs"
+
+[profile.release]
+panic = "abort"
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+debug = false
+strip = false
+overflow-checks = false
+debug-assertions = false
+incremental = false
+
+[profile.dev]
+panic = "abort"

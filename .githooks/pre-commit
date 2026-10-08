@@ -1,0 +1,5 @@
+#!/bin/sh
+
+set -ue
+
+gh actions-lock --verify-local
