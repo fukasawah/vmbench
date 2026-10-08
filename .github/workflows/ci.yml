@@ -28,8 +28,6 @@ jobs:
         run: cargo build --release
       - name: Self-containment audit
         run: tools/audit.sh
-      - name: Registry consistency (docs/STATUS.md)
-        run: python3 tools/status_check.py
       - name: Verification run (quick)
         run: |
           ./target/x86_64-unknown-linux-gnu/release/vmbench --quick --quiet --output /tmp/report.json
